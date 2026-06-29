@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L'Atelier – Boulangerie Pâtisserie Artisanale · Villefranche-sur-Saône</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #faf6ef;
+      --warm:    #f2e8d5;
+      --gold:    #b8832a;
+      --gold-lt: #d4a54e;
+      --dark:    #1a0f06;
+      --brown:   #5c3317;
+      --green:   #2b3d2c;
+      --text:    #2e1d0e;
+      --muted:   #8a7060;
+      --border:  rgba(184,131,42,.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CURSEUR CUSTOM ─── */
+    *, *::before, *::after { cursor: none !important; }
+    #cursor {
+      font-size: 22px;
+      line-height: 1;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-4px, -20px) rotate(-30deg);
+      transition: font-size .2s ease, transform .2s ease;
+      user-select: none;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.18));
+    }
+    body.cursor-hover #cursor {
+      font-size: 28px;
+      transform: translate(-4px, -24px) rotate(-15deg);
+    }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity .7s ease,transform .7s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+    .reveal-left  { opacity:0; transform:translateX(-50px); transition:opacity .8s ease,transform .8s ease; }
+    .reveal-right { opacity:0; transform:translateX(50px);  transition:opacity .8s ease,transform .8s ease; }
+    .reveal-left.visible,.reveal-right.visible { opacity:1; transform:none; }
+
+    /* ─── NAV ─── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 3rem; height:72px;
+      background:rgba(250,246,239,.98);
+      backdrop-filter:blur(12px);
+      box-shadow:0 1px 0 var(--border);
+    }
+    .nav-logo {
+      font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:600;
+      color:var(--brown); text-decoration:none; letter-spacing:.04em;
+    }
+    .nav-logo em { font-style:italic; color:var(--gold); }
+    .nav-links { display:flex; align-items:center; gap:2.2rem; list-style:none; }
+    .nav-links a {
+      text-decoration:none; color:var(--muted); font-size:.82rem;
+      font-weight:500; letter-spacing:.1em; text-transform:uppercase;
+      transition:color .3s; position:relative;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-3px; left:0; right:0;
+      height:1px; background:var(--gold); transform:scaleX(0); transition:transform .3s;
+    }
+    .nav-links a:hover::after { transform:scaleX(1); }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-cta {
+      background:var(--gold)!important; color:#fff!important;
+      padding:.5rem 1.4rem!important; border-radius:40px!important; letter-spacing:.06em!important;
+    }
+    .nav-cta::after { display:none!important; }
+    .nav-cta:hover { background:var(--brown)!important; }
+
+    /* ─── HERO ─── */
+    .hero { position:relative; min-height:100vh; display:grid; grid-template-columns:1fr 1fr; overflow:hidden; }
+    .hero-left {
+      display:flex; flex-direction:column; justify-content:flex-start;
+      padding:calc(72px + 1.2rem) 4rem 4rem 6rem; background:var(--dark); position:relative; z-index:2;
+    }
+    .hero-left::after { display:none; }
+    .hero-eyebrow { display:flex; align-items:center; gap:.8rem; margin-bottom:1.8rem; }
+    .hero-line { width:40px; height:1px; background:var(--gold); }
+    .hero-eyebrow span { font-size:.75rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); }
+    .hero h1 {
+      font-family:'Cormorant Garamond',serif; font-size:clamp(3.5rem,5.5vw,6rem);
+      font-weight:300; line-height:1.05; color:#fff; margin-bottom:1.5rem;
+    }
+    .hero h1 em { font-style:italic; color:var(--gold-lt); display:block; }
+    .hero-desc { font-size:1rem; color:rgba(255,255,255,.55); max-width:380px; margin-bottom:2.5rem; line-height:1.8; }
+    .hero-actions { display:flex; gap:1rem; align-items:center; }
+    .btn-gold {
+      background:var(--gold); color:#fff; padding:.9rem 2.2rem; border-radius:50px;
+      text-decoration:none; font-size:.88rem; font-weight:500; letter-spacing:.06em;
+      transition:background .25s,transform .25s; display:inline-block;
+    }
+    .btn-gold:hover { background:var(--gold-lt); transform:translateY(-2px); }
+    .btn-ghost {
+      color:rgba(255,255,255,.6); text-decoration:none; font-size:.85rem;
+      letter-spacing:.06em; display:flex; align-items:center; gap:.5rem; transition:color .25s;
+    }
+    .btn-ghost:hover { color:#fff; }
+    .btn-ghost svg { transition:transform .25s; }
+    .btn-ghost:hover svg { transform:translateX(4px); }
+    .hero-stats { display:flex; gap:2.5rem; margin-top:4rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,.08); }
+    .stat-num { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:600; color:var(--gold-lt); line-height:1; margin-bottom:.2rem; }
+    .stat-label { font-size:.75rem; color:rgba(255,255,255,.4); letter-spacing:.06em; text-transform:uppercase; }
+    .hero-right { position:relative; overflow:hidden; }
+    .hero-right img { width:100%; height:100%; object-fit:cover; display:block; filter:brightness(.85) saturate(1.1); }
+    .hero-right::before { display:none; }
+    .hero-scroll {
+      position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:.5rem;
+      color:rgba(255,255,255,.4); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; z-index:10;
+    }
+    .scroll-line {
+      width:1px; height:50px;
+      background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);
+      animation:scrollLine 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0%   { transform:scaleY(0); transform-origin:top; }
+      50%  { transform:scaleY(1); transform-origin:top; }
+      51%  { transform:scaleY(1); transform-origin:bottom; }
+      100% { transform:scaleY(0); transform-origin:bottom; }
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-strip { background:var(--gold); padding:.9rem 0; overflow:hidden; white-space:nowrap; }
+    .marquee-inner { display:inline-flex; animation:marquee 22s linear infinite; }
+    .marquee-inner span { font-size:.78rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:#fff; padding:0 2.5rem; }
+    .marquee-dot { color:rgba(255,255,255,.4); }
+    @keyframes marquee { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+
+    /* ─── SECTION GENERIC ─── */
+    section { padding:7rem 2rem; }
+    .container { max-width:1140px; margin:0 auto; }
+    .eyebrow { display:flex; align-items:center; gap:.8rem; margin-bottom:1.2rem; }
+    .eyebrow-line { width:30px; height:1px; background:var(--gold); }
+    .eyebrow span { font-size:.72rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); }
+    .section-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,4vw,3.4rem); font-weight:400; color:var(--dark); line-height:1.15; margin-bottom:1.2rem; }
+    .section-title em { font-style:italic; color:var(--gold); }
+    .section-sub { color:var(--muted); font-size:1rem; max-width:480px; line-height:1.8; }
+
+    /* ─── FEATURED GRID ─── */
+    #featured { background:var(--warm); }
+
+    .featured-grid {
+      display:grid;
+      grid-template-columns:1.3fr 1fr 1fr;
+      grid-template-rows:auto auto;
+      gap:1.2rem;
+      margin-top:3.5rem;
+    }
+
+    .feat-card {
+      border-radius:20px; overflow:hidden; position:relative;
+      cursor:pointer;
+    }
+
+    .feat-card img {
+      width:100%; height:100%; object-fit:cover; display:block;
+      transition:transform .6s ease;
+    }
+    .feat-card:hover img { transform:scale(1.06); }
+
+    .feat-card.large { grid-row:span 2; height:520px; }
+    .feat-card.small { height:248px; }
+
+    .feat-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top,rgba(26,15,6,.8) 0%,transparent 55%);
+      display:flex; flex-direction:column; justify-content:flex-end; padding:1.8rem;
+      transition:background .3s;
+    }
+    .feat-card:hover .feat-overlay {
+      background:linear-gradient(to top,rgba(26,15,6,.92) 0%,rgba(26,15,6,.15) 100%);
+    }
+
+    .feat-tag {
+      display:inline-block; background:var(--gold); color:#fff;
+      font-size:.68rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+      padding:.3rem .8rem; border-radius:20px; margin-bottom:.6rem; align-self:flex-start;
+    }
+    .feat-overlay h3 {
+      font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; color:#fff; line-height:1.2;
+    }
+    .feat-overlay p { font-size:.82rem; color:rgba(255,255,255,.65); margin-top:.3rem; }
+
+    .feat-cta {
+      display:inline-flex; align-items:center; gap:.5rem;
+      margin-top:1rem; color:var(--gold-lt); font-size:.82rem; font-weight:500;
+      letter-spacing:.06em; opacity:0; transform:translateY(6px);
+      transition:opacity .3s,transform .3s;
+    }
+    .feat-card:hover .feat-cta { opacity:1; transform:none; }
+    .feat-cta svg { transition:transform .25s; }
+    .feat-card:hover .feat-cta svg { transform:translateX(4px); }
+
+    /* ─── MODAL ─── */
+    .modal-backdrop {
+      position:fixed; inset:0; z-index:500;
+      background:rgba(10,5,2,.75);
+      backdrop-filter:blur(8px);
+      display:flex; align-items:center; justify-content:center;
+      padding:2rem;
+      opacity:0; pointer-events:none;
+      transition:opacity .35s ease;
+    }
+    .modal-backdrop.open { opacity:1; pointer-events:all; }
+
+    .modal {
+      background:var(--cream); border-radius:24px;
+      width:100%; max-width:960px; max-height:88vh;
+      overflow-y:auto; position:relative;
+      transform:translateY(30px) scale(.97);
+      transition:transform .35s ease;
+      box-shadow:0 40px 100px rgba(10,5,2,.35);
+    }
+    .modal-backdrop.open .modal { transform:none; }
+
+    .modal-header {
+      position:sticky; top:0; z-index:10;
+      background:var(--cream);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1.8rem 2.2rem 1.2rem;
+      border-bottom:1px solid var(--border);
+    }
+
+    .modal-header-left {}
+    .modal-cat-tag {
+      font-size:.68rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:.3rem;
+    }
+    .modal-title {
+      font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:400;
+      color:var(--dark); line-height:1.1;
+    }
+    .modal-close {
+      width:42px; height:42px; border-radius:50%; border:1px solid var(--border);
+      background:var(--warm); cursor:pointer; display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem; color:var(--muted); transition:background .2s,color .2s; flex-shrink:0;
+    }
+    .modal-close:hover { background:var(--gold); color:#fff; }
+
+    .modal-body { padding:2rem 2.2rem 2.5rem; }
+
+    .modal-desc {
+      font-size:.92rem; color:var(--muted); margin-bottom:2rem; max-width:560px; line-height:1.8;
+    }
+
+    .modal-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+      gap:1rem;
+    }
+
+    .modal-card {
+      border-radius:14px; overflow:hidden;
+      background:#fff; border:1px solid var(--border);
+      transition:transform .3s,box-shadow .3s;
+    }
+    .modal-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px rgba(26,15,6,.1); }
+
+    .modal-card-img {
+      width:100%; aspect-ratio:3/4; object-fit:cover; display:block;
+      background:var(--warm);
+    }
+    .modal-card-img.landscape { aspect-ratio:4/3; }
+
+    .modal-card-body { padding:1rem; }
+    .modal-card-body h4 {
+      font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:400;
+      color:var(--dark); margin-bottom:.2rem;
+    }
+    .modal-card-body p { font-size:.78rem; color:var(--muted); line-height:1.6; }
+
+    .modal-info-banner {
+      margin-top:2rem; padding:1.2rem 1.5rem;
+      background:rgba(184,131,42,.08); border-radius:12px;
+      border:1px solid var(--border);
+      display:flex; align-items:center; gap:1rem;
+      font-size:.84rem; color:var(--muted);
+    }
+    .modal-info-banner span { font-size:1.2rem; }
+
+    /* ─── MODAL STUDIO (Noël) ─── */
+    .modal-studio {
+      background:#080808;
+      color:#fff;
+    }
+    .modal-studio .modal-header {
+      background:#080808;
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .modal-studio .modal-cat-tag { color:var(--gold-lt); }
+    .modal-studio .modal-title { color:#fff; }
+    .modal-studio .modal-close {
+      background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.12); color:rgba(255,255,255,.5);
+    }
+    .modal-studio .modal-close:hover { background:var(--gold); color:#fff; }
+    .modal-studio .modal-body { background:#080808; }
+    .modal-studio .modal-desc { color:rgba(255,255,255,.45); }
+
+    .studio-hero {
+      width:100%; height:340px; object-fit:cover; border-radius:14px; display:block;
+      margin-bottom:2rem;
+      box-shadow:0 20px 60px rgba(0,0,0,.8);
+    }
+
+    .studio-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1.2rem;
+      margin-bottom:1.5rem;
+    }
+
+    .studio-card {
+      border-radius:12px; overflow:hidden; position:relative;
+      background:#111; cursor:pointer;
+      transition:transform .3s,box-shadow .3s;
+    }
+    .studio-card:hover { transform:translateY(-6px); box-shadow:0 24px 50px rgba(0,0,0,.7); }
+
+    .studio-card img {
+      width:100%; aspect-ratio:2/3; object-fit:cover; display:block;
+      filter:brightness(.92) contrast(1.05) saturate(1.1);
+      transition:filter .4s,transform .5s;
+    }
+    .studio-card:hover img { filter:brightness(1) contrast(1.08) saturate(1.2); transform:scale(1.04); }
+
+    .studio-card-label {
+      position:absolute; bottom:0; left:0; right:0;
+      padding:2rem 1rem .9rem;
+      background:linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 100%);
+    }
+    .studio-card-label h4 {
+      font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400; color:#fff;
+      margin-bottom:.1rem;
+    }
+    .studio-card-label p { font-size:.72rem; color:rgba(255,255,255,.45); }
+    .studio-price {
+      position:absolute; top:.7rem; right:.7rem;
+      background:var(--gold); color:#fff;
+      font-size:.68rem; font-weight:700; letter-spacing:.06em;
+      padding:.25rem .7rem; border-radius:20px;
+    }
+
+    .studio-banner {
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+      border-radius:12px; padding:1.2rem 1.5rem;
+      display:flex; align-items:center; gap:1rem;
+      font-size:.83rem; color:rgba(255,255,255,.4);
+      margin-top:1.5rem;
+    }
+    .studio-banner span { font-size:1.2rem; }
+
+    /* ─── À PROPOS ─── */
+    #apropos .about-wrap { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center; }
+    .about-img-stack { position:relative; height:520px; }
+    .about-img-main { position:absolute; top:0; left:0; width:80%; height:420px; border-radius:20px; object-fit:cover; box-shadow:0 24px 60px rgba(26,15,6,.2); }
+    .about-img-accent { position:absolute; bottom:0; right:0; width:55%; height:260px; border-radius:16px; object-fit:cover; border:6px solid var(--cream); box-shadow:0 16px 40px rgba(26,15,6,.15); }
+    .about-badge { position:absolute; bottom:60px; left:-20px; background:var(--gold); color:#fff; border-radius:16px; padding:1rem 1.4rem; font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-style:italic; box-shadow:0 8px 24px rgba(184,131,42,.35); z-index:5; }
+    .about-badge strong { display:block; font-style:normal; font-size:1.8rem; }
+    .about-text .section-sub { margin-bottom:2.5rem; }
+    .values { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .value-card { background:var(--warm); border-radius:14px; padding:1.3rem; border:1px solid var(--border); }
+    .value-icon { font-size:1.6rem; margin-bottom:.6rem; }
+    .value-card h4 { font-size:.9rem; font-weight:700; color:var(--dark); margin-bottom:.25rem; }
+    .value-card p { font-size:.82rem; color:var(--muted); line-height:1.6; }
+
+    /* ─── PROCESSUS ─── */
+    #processus { background:var(--dark); }
+    #processus .eyebrow span { color:rgba(255,255,255,.4); }
+    #processus .eyebrow-line { background:rgba(255,255,255,.2); }
+    #processus .section-title { color:#fff; }
+    .process-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:4rem; position:relative; }
+    .process-steps::before { content:''; position:absolute; top:28px; left:10%; right:10%; height:1px; background:linear-gradient(to right,transparent,rgba(184,131,42,.4),transparent); }
+    .process-step { text-align:center; padding:0 1.5rem; position:relative; }
+    .step-num { width:56px; height:56px; border-radius:50%; border:1px solid rgba(184,131,42,.4); display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem; font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--gold); background:var(--dark); position:relative; z-index:2; }
+    .process-step h3 { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:400; color:#fff; margin-bottom:.5rem; }
+    .process-step p { font-size:.83rem; color:rgba(255,255,255,.4); line-height:1.7; }
+
+    /* ─── AVIS ─── */
+    #avis { background:var(--warm); }
+    .rating-hero { display:flex; align-items:center; gap:3rem; margin-bottom:3.5rem; padding:2.5rem; background:var(--cream); border-radius:20px; border:1px solid var(--border); }
+    .rating-big { text-align:center; flex-shrink:0; }
+    .rating-num { font-family:'Cormorant Garamond',serif; font-size:5rem; font-weight:300; line-height:1; color:var(--dark); }
+    .stars { color:#f5a623; font-size:1.3rem; letter-spacing:.1em; }
+    .rating-count { font-size:.82rem; color:var(--muted); margin-top:.3rem; }
+    .rating-bars { flex:1; }
+    .bar-row { display:flex; align-items:center; gap:.8rem; margin-bottom:.5rem; }
+    .bar-label { font-size:.8rem; color:var(--muted); width:30px; text-align:right; }
+    .bar-track { flex:1; height:6px; background:var(--warm); border-radius:3px; overflow:hidden; }
+    .bar-fill { height:100%; background:var(--gold); border-radius:3px; transition:width 1.2s ease; }
+    .bar-pct { font-size:.78rem; color:var(--muted); width:30px; }
+    .reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
+    .review-card { background:var(--cream); border-radius:16px; padding:1.8rem; border:1px solid var(--border); transition:transform .3s,box-shadow .3s; }
+    .review-card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(26,15,6,.08); }
+    .review-header { display:flex; align-items:center; gap:.9rem; margin-bottom:1rem; }
+    .reviewer-avatar { width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:700; color:#fff; flex-shrink:0; }
+    .reviewer-name { font-weight:700; font-size:.9rem; color:var(--dark); }
+    .reviewer-date { font-size:.75rem; color:var(--muted); }
+    .review-stars { color:#f5a623; font-size:.85rem; }
+    .review-text { font-size:.88rem; color:var(--muted); line-height:1.75; }
+
+    /* ─── HORAIRES (intégrées dans contact) ─── */
+    .hours-inline { margin-top:2rem; }
+    .hours-row { display:flex; justify-content:space-between; align-items:center; padding:.75rem 0; border-bottom:1px solid var(--border); }
+    .hours-row:last-child { border-bottom:none; }
+    .hours-day { font-size:.85rem; color:var(--muted); }
+    .hours-time { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--dark); }
+    .open-badge { display:inline-flex; align-items:center; gap:.5rem; background:rgba(74,222,128,.1); border:1px solid rgba(74,222,128,.25); border-radius:30px; padding:.4rem 1rem; margin-bottom:1.5rem; }
+    .open-dot { width:8px; height:8px; border-radius:50%; background:#4ade80; box-shadow:0 0 8px rgba(74,222,128,.6); animation:pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+    .open-badge span { font-size:.8rem; color:#2d7a3a; font-weight:600; }
+
+    /* ─── CONTACT ─── */
+    #contact .contact-wrap { display:grid; grid-template-columns:1fr 1.4fr; gap:4rem; align-items:start; }
+    .contact-info { display:flex; flex-direction:column; }
+    .contact-item { display:flex; align-items:flex-start; gap:1.2rem; padding:1.5rem 0; border-bottom:1px solid var(--border); }
+    .contact-item:last-child { border-bottom:none; }
+    .c-icon { width:44px; height:44px; border-radius:12px; background:rgba(184,131,42,.1); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .c-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:.2rem; }
+    .c-val { font-size:.95rem; color:var(--dark); font-weight:500; }
+    .c-val a { color:var(--dark); text-decoration:none; }
+    .c-val a:hover { color:var(--gold); }
+    .map-wrap { border-radius:20px; overflow:hidden; height:380px; box-shadow:0 20px 50px rgba(26,15,6,.12); }
+    .map-wrap iframe { width:100%; height:100%; border:0; display:block; }
+
+    /* ─── FOOTER ─── */
+    footer { background:var(--dark); padding:4rem 2rem 2rem; }
+    .footer-top { max-width:1140px; margin:0 auto; display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:4rem; padding-bottom:3rem; border-bottom:1px solid rgba(255,255,255,.06); }
+    .footer-brand-logo { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:400; color:#fff; margin-bottom:1rem; }
+    .footer-brand-logo em { font-style:italic; color:var(--gold); }
+    .footer-brand-desc { font-size:.85rem; color:rgba(255,255,255,.35); line-height:1.8; max-width:280px; }
+    .footer-col h4 { font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:1.2rem; }
+    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:.7rem; }
+    .footer-col ul a { text-decoration:none; font-size:.88rem; color:rgba(255,255,255,.45); transition:color .2s; }
+    .footer-col ul a:hover { color:var(--gold); }
+    .footer-bottom { max-width:1140px; margin:2rem auto 0; display:flex; justify-content:space-between; align-items:center; }
+    .footer-bottom p { font-size:.78rem; color:rgba(255,255,255,.2); }
+    .footer-bottom a { color:var(--gold); text-decoration:none; }
+    .social-links { display:flex; gap:.8rem; margin-top:1.2rem; }
+    .social-btn {
+      display:flex; align-items:center; gap:.5rem;
+      text-decoration:none; font-size:.82rem; color:rgba(255,255,255,.45);
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+      border-radius:30px; padding:.45rem 1rem;
+      transition:background .2s,color .2s,border-color .2s;
+    }
+    .social-btn:hover { background:var(--gold); border-color:var(--gold); color:#fff; }
+    .social-btn svg { flex-shrink:0; }
+
+    /* ─── FLOATING ─── */
+    .float-call {
+      position:fixed; bottom:2rem; right:2rem; width:54px; height:54px;
+      border-radius:50%; background:var(--gold); color:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:1.3rem;
+      text-decoration:none; box-shadow:0 6px 20px rgba(184,131,42,.45); z-index:300;
+      transition:transform .25s,box-shadow .25s;
+    }
+    .float-call:hover { transform:scale(1.1); box-shadow:0 10px 30px rgba(184,131,42,.55); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width:900px) {
+      .hero { grid-template-columns:1fr; }
+      .hero-right { height:50vw; }
+      .hero-left { padding:9rem 2rem 4rem; }
+      .hero-left::after { display:none; }
+      .nav-links { display:none; }
+      #apropos .about-wrap, #contact .contact-wrap { grid-template-columns:1fr; gap:2.5rem; }
+      .featured-grid { grid-template-columns:1fr 1fr; }
+      .feat-card.large { height:300px; grid-row:span 1; }
+      .process-steps { grid-template-columns:1fr 1fr; gap:2rem; }
+      .process-steps::before { display:none; }
+      .reviews-grid { grid-template-columns:1fr; }
+      .footer-top { grid-template-columns:1fr; gap:2rem; }
+      .modal-grid { grid-template-columns:repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── FLOATING CALL ── -->
+<a href="tel:+33474033602" class="float-call" title="Nous appeler">📞</a>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#accueil" class="nav-logo">L'<em>Atelier</em></a>
+  <ul class="nav-links">
+    <li><a href="#featured">Nos Créations</a></li>
+    <li><a href="#apropos">À Propos</a></li>
+    <li><a href="#avis">Avis</a></li>
+    <li><a href="#contact">Horaires</a></li>
+    <li><a href="#contact" class="nav-cta">Nous Trouver</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="accueil">
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <div class="hero-line"></div>
+      <span>Boulangerie Pâtisserie Artisanale</span>
+    </div>
+    <h1>Votre<br />Destination<br /><em>Gourmande.</em></h1>
+    <p class="hero-desc">Pains façonnés à la main, pâtisseries contemporaines et douceurs de saison — élaborés chaque matin avant l'aube, pour que vous ayez toujours le meilleur.</p>
+    <div class="hero-actions">
+      <a href="#featured" class="btn-gold">Découvrir nos créations</a>
+      <a href="#contact" class="btn-ghost">
+        Nous trouver
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">4.2★</div><div class="stat-label">Note Google</div></div>
+      <div><div class="stat-num">1 100+</div><div class="stat-label">Avis clients</div></div>
+      <div><div class="stat-num">7j/7</div><div class="stat-label">Ouvert</div></div>
+    </div>
+  </div>
+  <div class="hero-right" style="background:#faf6ef;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;">
+    <svg viewBox="0 0 220 260" width="240" height="280" xmlns="http://www.w3.org/2000/svg">
+      <text x="110" y="220" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="220" font-weight="300" fill="#1a0f06">a</text>
+    </svg>
+    <p style="font-family:'Cormorant Garamond',serif;color:rgba(26,15,6,.4);font-size:.82rem;letter-spacing:.28em;text-transform:uppercase;margin-top:-1rem;">Boulangerie l'Atelier</p>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div><span>Défiler</span></div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span>Baguette Tradition</span><span class="marquee-dot">·</span>
+    <span>Pains Artisanaux</span><span class="marquee-dot">·</span>
+    <span>Éclairs Signature</span><span class="marquee-dot">·</span>
+    <span>Macarons & Mignardises</span><span class="marquee-dot">·</span>
+    <span>Tartes de Saison</span><span class="marquee-dot">·</span>
+    <span>Les Classiques</span><span class="marquee-dot">·</span>
+    <span>Spécialités Limitées</span><span class="marquee-dot">·</span>
+    <span>Fait Maison Chaque Jour</span><span class="marquee-dot">·</span>
+    <span>Baguette Tradition</span><span class="marquee-dot">·</span>
+    <span>Pains Artisanaux</span><span class="marquee-dot">·</span>
+    <span>Éclairs Signature</span><span class="marquee-dot">·</span>
+    <span>Macarons & Mignardises</span><span class="marquee-dot">·</span>
+    <span>Tartes de Saison</span><span class="marquee-dot">·</span>
+    <span>Les Classiques</span><span class="marquee-dot">·</span>
+    <span>Spécialités Limitées</span><span class="marquee-dot">·</span>
+    <span>Fait Maison Chaque Jour</span><span class="marquee-dot">·</span>
+  </div>
+</div>
+
+<!-- ── CRÉATIONS ── -->
+<section id="featured">
+  <div class="container">
+    <div class="reveal">
+      <div class="eyebrow"><div class="eyebrow-line"></div><span>Notre Savoir-Faire</span></div>
+      <h2 class="section-title">Des créations façonnées<br /><em>avec passion</em></h2>
+      <p class="section-sub">Cliquez sur une catégorie pour découvrir tous nos produits. De la baguette croustillante aux entremets les plus délicats.</p>
+    </div>
+
+    <div class="featured-grid">
+
+      <!-- Pains — large, sans modal -->
+      <div class="feat-card large reveal-left">
+        <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=900&q=85" alt="Pains artisanaux" style="object-position:center center" onerror="this.src='https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=900&q=85'" />
+        <div class="feat-overlay">
+          <span class="feat-tag">★ Incontournable</span>
+          <h3>Pains Artisanaux</h3>
+          <p>Baguette tradition, campagne, seigle, épeautre…</p>
+        </div>
+      </div>
+
+      <!-- Classiques -->
+      <div class="feat-card small reveal" onclick="openModal('classiques')">
+        <img src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/738203ea-8362-4e35-8467-1ab2d4a8e8a8/l0,t367,w922,h1121/image-768x934.png" alt="Les Classiques" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&q=80'" />
+        <div class="feat-overlay">
+          <span class="feat-tag">Signature</span>
+          <h3>Les Classiques</h3>
+          <p>Nos pâtisseries emblématiques</p>
+          <div class="feat-cta">Voir tous <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Éclairs -->
+      <div class="feat-card small reveal" onclick="openModal('eclairs')">
+        <img src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/534cbcb3-4b05-4d9f-b785-f221fd723308/image-455x607.png" alt="Éclairs" onerror="this.src='https://images.unsplash.com/photo-1612197527762-8cfb530b8b6b?w=600&q=80'" />
+        <div class="feat-overlay">
+          <span class="feat-tag">Bestseller</span>
+          <h3>Éclairs & Choux</h3>
+          <p>Chocolat, Nutella, Pistache…</p>
+          <div class="feat-cta">Voir tous <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Spécialités -->
+      <div class="feat-card small reveal" onclick="openModal('specialites')">
+        <img src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/d32fa780-5a2c-410a-b970-91c22e52ba8b/l75,t0,w1851,h1996/image-768x828.png" alt="Spécialités" onerror="this.src='https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=600&q=80'" />
+        <div class="feat-overlay">
+          <span class="feat-tag">Édition limitée</span>
+          <h3>Spécialités</h3>
+          <p>Créations uniques en boutique</p>
+          <div class="feat-cta">Voir tous <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Tartes -->
+      <div class="feat-card small reveal" onclick="openModal('tartes')">
+        <img src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/410bff91-b12d-4b8e-b7b3-cdffb683e2f5/l0,t123,w1859,h1754/image-768x725.png" alt="Tartes" onerror="this.src='https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=600&q=80'" />
+        <div class="feat-overlay">
+          <span class="feat-tag">Fait maison</span>
+          <h3>Tartes de Saison</h3>
+          <p>Fruits frais, pâte feuilletée maison</p>
+          <div class="feat-cta">Voir toutes <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Bûches de Noël -->
+      <div class="feat-card small reveal" onclick="openModal('noel')">
+        <img src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/04899d24-84d7-4a79-ba01-dea6f695918c/l0,t4,w1536,h1011/image-1366x899.png" alt="Bûches de Noël" onerror="this.src='https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=600&q=80'" />
+        <div class="feat-overlay">
+          <span class="feat-tag">Noël 2025</span>
+          <h3>Bûches & Bûchettes</h3>
+          <p>Collection signature – 6 parfums</p>
+          <div class="feat-cta">Voir la collection <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Le Beaujolais -->
+      <div class="feat-card small reveal" onclick="openModal('beaujolais')">
+        <img src="beaujolais.png" alt="Le Beaujolais" style="object-position:center center" />
+        <div class="feat-overlay">
+          <span class="feat-tag">Terroir local</span>
+          <h3>Le Beaujolais</h3>
+          <p>Créations inspirées du vignoble</p>
+          <div class="feat-cta">Découvrir <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Matières Premières -->
+      <div class="feat-card small reveal" onclick="openModal('matieres')">
+        <img src="matieres-premieres.webp" alt="Matières premières" style="object-position:center center" />
+        <div class="feat-overlay">
+          <span class="feat-tag">Qualité</span>
+          <h3>Nos Matières Premières</h3>
+          <p>Farines, beurres et ingrédients d'exception</p>
+          <div class="feat-cta">En savoir plus <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MODAUX ══════════════════ -->
+
+<!-- MODAL: Pains -->
+<div class="modal-backdrop" id="modal-pains" onclick="closeModalOutside(event,'modal-pains')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">Cuit chaque matin</div>
+        <div class="modal-title">Pains Artisanaux</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-pains')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">De la baguette tradition à nos pains spéciaux, chaque pièce est façonnée à la main et cuite dans notre four artisanal dès 06h00 du matin.</p>
+      <div class="modal-grid">
+        <div class="modal-card" style="background:#111">
+          <div class="modal-card-img" style="background:#111;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:2.5rem;">🥖</div>
+          <div class="modal-card-body"><h4>Baguette Tradition</h4><p>Croustillante, alvéolée, farine de qualité supérieure.</p></div>
+        </div>
+        <div class="modal-card" style="background:#111">
+          <div class="modal-card-img" style="background:#111;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:2.5rem;">🍞</div>
+          <div class="modal-card-body"><h4>Pain de Campagne</h4><p>Mie serrée, croûte dorée et épaisse.</p></div>
+        </div>
+        <div class="modal-card" style="background:#111">
+          <div class="modal-card-img" style="background:#111;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:2.5rem;">🌾</div>
+          <div class="modal-card-body"><h4>Pain au Seigle</h4><p>Léger et parfumé, idéal avec du fromage.</p></div>
+        </div>
+        <div class="modal-card" style="background:#111">
+          <div class="modal-card-img" style="background:#111;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:2.5rem;">🌿</div>
+          <div class="modal-card-body"><h4>Pain à l'Épeautre</h4><p>Saveur rustique, riche en nutriments.</p></div>
+        </div>
+        <div class="modal-card" style="background:#111">
+          <div class="modal-card-img" style="background:#111;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:2.5rem;">✨</div>
+          <div class="modal-card-body"><h4>Pain aux Graines</h4><p>Tournesol, sésame, lin — croquant et savoureux.</p></div>
+        </div>
+        <div class="modal-card" style="background:#111">
+          <div class="modal-card-img" style="background:#111;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.15);font-size:2.5rem;">🌾</div>
+          <div class="modal-card-body"><h4>Baguette Céréales</h4><p>Enrichie de céréales complètes, croustillante.</p></div>
+        </div>
+      </div>
+      <div class="modal-info-banner"><span>🌾</span> Photos à venir. Tous nos pains sont fabriqués avec des farines soigneusement sélectionnées, sans additifs ni conservateurs.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Les Classiques -->
+<div class="modal-backdrop" id="modal-classiques" onclick="closeModalOutside(event,'modal-classiques')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">Disponibles toute l'année</div>
+        <div class="modal-title">Les Classiques de l'Atelier</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-classiques')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Nos pâtisseries emblématiques, disponibles chaque jour tout au long de l'année. Ces créations représentent le cœur de notre savoir-faire artisanal.</p>
+      <div class="modal-grid">
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/b0ee965b-c774-4046-a132-a971db90a1d3/l0,t187,w1500,h1627/image-768x833.png" alt="Hollywood" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Hollywood</h4><p>Création signature de l'Atelier.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/407e204b-53ca-41d4-a53e-a5073cb86e88/l0,t289,w1500,h1631/image-768x835.png" alt="La Cacahuete" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>La Cacahuète</h4><p>Praliné cacahuète, texture fondante.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/5302ca9f-b42b-48ca-a10c-6638b8030aec/l0,t65,w1500,h1636/image-768x838.png" alt="La Rose" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>La Rose</h4><p>Délicate et florale, une création raffinée.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/ffbff82d-e88e-4ade-85c3-785de060a20b/l0,t324,w1500,h1628/image-768x834.png" alt="Le Succès" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Le Succès</h4><p>Biscuit amande, crème pralinée.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/c9d18b7a-dbf6-418b-b7e7-a1f0b093ea5d/l0,t63,w1500,h1617/image-768x828.png" alt="Le Kremlin" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Le Kremlin</h4><p>Intense et généreux, pour les amateurs de chocolat.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/159a70bb-642d-4923-a881-853e78e02603/l0,t184,w1500,h1620/image-768x829.png" alt="Citron Meringué" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Citron Meringué</h4><p>Acidulé et doux, meringue dorée à souhait.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/1a4d9747-9681-4905-9a06-c86f2c61d6cc/l0,t131,w1500,h1770/image-768x906.png" alt="La Noisette" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>La Noisette</h4><p>Gianduja crémeux, noisettes torréfiées.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/4084f7a0-cdfd-4e9f-b975-ba57d004e7ff/l0,t115,w1500,h1770/image-768x906.png" alt="Le Millefeuille" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Le Millefeuille</h4><p>Feuilletage caramélisé, crème pâtissière à la vanille.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/e9381edc-635b-4091-8d35-c26e4ec3e8a2/l0,t94,w1500,h1744/image-768x893.png" alt="Tartelette Fraise" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Tartelette Fraise</h4><p>Fraises fraîches de saison, crème mousseline légère.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/b2af4bae-c88d-4dfb-95f9-d4784782bc88/l0,t127,w1500,h1746/image-768x894.png" alt="Tartelette Framboises" onerror="this.src='https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Tartelette Framboises</h4><p>Framboises acidulées sur crème d'amande.</p></div>
+        </div>
+      </div>
+      <div class="modal-info-banner"><span>✨</span> Nos classiques sont disponibles 7j/7 en boutique, tout au long de l'année.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Éclairs -->
+<div class="modal-backdrop" id="modal-eclairs" onclick="closeModalOutside(event,'modal-eclairs')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">À déguster sous 48h</div>
+        <div class="modal-title">Nos Éclairs</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-eclairs')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Garnis de crèmes onctueuses et glacés avec soin, nos éclairs sont disponibles toute l'année en saveurs classiques, et en créations éphémères selon les saisons.</p>
+      <div class="modal-grid">
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/534cbcb3-4b05-4d9f-b785-f221fd723308/image-455x607.png" alt="Éclair Nutella" onerror="this.src='https://images.unsplash.com/photo-1612197527762-8cfb530b8b6b?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Éclair Nutella</h4><p>Crème Nutella, glaçage fondant au chocolat-noisette.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/d9f24ff6-4fdf-4c05-8ba2-6e64579b9c1b/image-455x607.png" alt="Éclair Chocolat" onerror="this.src='https://images.unsplash.com/photo-1612197527762-8cfb530b8b6b?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Éclair Chocolat</h4><p>Incontournable — crème chocolat intense, glaçage laqué.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/18be65c3-6b31-4122-8f34-436971397eb0/image-455x607.png" alt="Éclair Vanille" onerror="this.src='https://images.unsplash.com/photo-1612197527762-8cfb530b8b6b?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Éclair Vanille</h4><p>Crème pâtissière vanille Bourbon, fondant blanc.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/757ab1ba-108c-4aaf-9fe6-1a14694ccfc5/image-455x607.png" alt="Éclair Pistache" onerror="this.src='https://images.unsplash.com/photo-1612197527762-8cfb530b8b6b?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Éclair Pistache</h4><p>Crème pistache de Sicile, glaçage vert délicat.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/403ff553-a380-47b6-8582-5a64645ef744/image-455x607.png" alt="Éclair Café" onerror="this.src='https://images.unsplash.com/photo-1612197527762-8cfb530b8b6b?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Éclair Café</h4><p>Crème café arabica, finition moka brillante.</p></div>
+        </div>
+      </div>
+      <div class="modal-info-banner"><span>⏱️</span> Nos éclairs sont à déguster sous 48h. Sortir du réfrigérateur 15 minutes avant consommation pour une texture optimale.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Spécialités -->
+<div class="modal-backdrop" id="modal-specialites" onclick="closeModalOutside(event,'modal-specialites')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">Éditions limitées · Renouvelées chaque semaine</div>
+        <div class="modal-title">Nos Spécialités</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-specialites')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Créations uniques, disponibles en boutique pour une durée limitée. Nos artisans renouvellent leurs innovations chaque semaine en suivant les saisons et leur inspiration.</p>
+      <div class="modal-grid">
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/d32fa780-5a2c-410a-b970-91c22e52ba8b/l75,t0,w1851,h1996/image-768x828.png" alt="Le Jardin" onerror="this.src='https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Le Jardin</h4><p>Création florale et fraîche, signature de la maison.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/cee69d42-5023-4e93-abd4-583496a73beb/l0,t190,w1500,h1620/image-768x829.png" alt="Le Mont Blanc" onerror="this.src='https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Le Mont Blanc</h4><p>Crème de marron, meringue légère, chantilly.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img landscape" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/fd3ea23b-613c-440d-b4fb-4761f3d2385c/l0,t216,w1024,h768/image-768x576.jpg" alt="Dubai Style" onerror="this.src='https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Dubai Style</h4><p>Revisité à la mode de Dubaï — chocolat croustillant, pistache.</p></div>
+        </div>
+      </div>
+      <div class="modal-info-banner"><span>🔄</span> Nos spécialités changent régulièrement. Suivez-nous ou appelez-nous pour connaître les créations de la semaine.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Tartes -->
+<div class="modal-backdrop" id="modal-tartes" onclick="closeModalOutside(event,'modal-tartes')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">Pâte feuilletée maison</div>
+        <div class="modal-title">Nos Tartes de Saison</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-tartes')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Fruits de saison, crèmes maison et pâtes feuilletées artisanales — nos tartes changent au fil des saisons pour vous offrir toujours les meilleurs produits.</p>
+      <div class="modal-grid">
+        <div class="modal-card">
+          <img class="modal-card-img landscape" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/410bff91-b12d-4b8e-b7b3-cdffb683e2f5/l0,t123,w1859,h1754/image-768x725.png" alt="Tarte de saison" onerror="this.src='https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=400&q=80'" />
+          <div class="modal-card-body"><h4>Tarte aux Fruits Rouges</h4><p>Fraises, framboises, myrtilles sur crème d'amande.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img landscape" src="https://images.unsplash.com/photo-1648412009969-de91a17f4340?w=600&q=85" alt="Tarte Citron Meringuée" />
+          <div class="modal-card-body"><h4>Tarte Citron Meringuée</h4><p>Crème citron vive et acidulée, meringue italienne dorée à souhait.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://images.unsplash.com/photo-1616031037011-087000171abe?w=600&q=85" alt="Tarte Chocolat-Caramel" />
+          <div class="modal-card-body"><h4>Tarte Chocolat-Caramel</h4><p>Ganache chocolat noir intense, caramel beurre salé, pâte sablée.</p></div>
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://images.unsplash.com/photo-1506459225024-1428097a7e18?w=400&q=80" alt="Tarte abricot" />
+          <div class="modal-card-body"><h4>Tarte Abricot</h4><p>Abricots pochés, amandine légère, gelée brillante.</p></div>
+        </div>
+      </div>
+      <div class="modal-info-banner"><span>🍓</span> Les tartes aux fruits varient selon les arrivages de saison. Disponibles en format individuel et en grande taille.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Noël -->
+<div class="modal-backdrop" id="modal-noel" onclick="closeModalOutside(event,'modal-noel')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">Collection Noël 2025 · Commandes ouvertes</div>
+        <div class="modal-title">Bûches & Bûchettes</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-noel')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Collection signature — 6 parfums disponibles en bûchette individuelle (5,90 €) et en bûche grand format pour 6-7 personnes (34,90 €).</p>
+      <div class="modal-grid">
+
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/f7a554ff-7bb5-4291-8759-158ad9b499b8/image-683x455.png" alt="Étoile Polaire" />
+          <div class="modal-card-body">
+            <h4>Étoile Polaire</h4><p>Vanille · 5,90 € / bûchette · 34,90 € / bûche</p>
+          </div>
+        </div>
+
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/3c18d4ee-d7d3-4bce-9ce3-e7ce48cd0664/image-455x455.png" alt="Éclipse" />
+          <div class="modal-card-body">
+            <h4>Éclipse</h4><p>Pistache · 5,90 € / bûchette · 34,90 € / bûche</p>
+          </div>
+        </div>
+
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/5c41b4bb-143d-48e6-8af3-1e85dca94f08/image-455x683.png" alt="Voie Lactée" />
+          <div class="modal-card-body">
+            <h4>Voie Lactée</h4><p>Chocolat & Noisette · 5,90 € / bûchette · 34,90 € / bûche</p>
+          </div>
+        </div>
+
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/f9f8f93d-0d75-4c50-b719-4be921effe79/image-455x683.png" alt="Comète" />
+          <div class="modal-card-body">
+            <h4>Comète</h4><p>Chocolat · 5,90 € / bûchette · 34,90 € / bûche</p>
+          </div>
+        </div>
+
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/b1427e50-311b-4e9e-b3d5-2ac0cca7b5f6/image-455x683.png" alt="Aurora" />
+          <div class="modal-card-body">
+            <h4>Aurora</h4><p>Framboise · 5,90 € / bûchette · 34,90 € / bûche</p>
+          </div>
+        </div>
+
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/24455e88-579a-48f0-9bb7-c0f2b12c4185/image-455x683.png" alt="Andromède" />
+          <div class="modal-card-body">
+            <h4>Andromède</h4><p>Pop-corn caramel · 5,90 € / bûchette · 34,90 € / bûche</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-info-banner"><span>🎄</span> Commandes par téléphone au 04 74 03 36 02.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Beaujolais -->
+<div class="modal-backdrop" id="modal-beaujolais" onclick="closeModalOutside(event,'modal-beaujolais')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">Terroir local</div>
+        <div class="modal-title">Le Beaujolais</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-beaujolais')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Des créations inspirées par notre région, le Beaujolais — l'Atelier met à l'honneur ce terroir unique à travers des pâtisseries de saison.</p>
+      <div class="modal-grid">
+        <div class="modal-card">
+          <img class="modal-card-img" src="beaujolais.png" alt="Le Beaujolais" style="object-position:center center" />
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/5fa80a86-0f89-4716-9fa2-fa1818bf6060/l0,t0,w768,h1024/image.png" alt="Le Beaujolais" />
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/7ebf7f53-4b0a-4caf-a723-fe618cdbeaec/l0,t0,w768,h1024/image.png" alt="Le Beaujolais" />
+        </div>
+      </div>
+      <div class="modal-info-banner"><span>🍇</span> Disponibles en saison. Renseignez-vous en boutique ou par téléphone au 04 74 03 36 02.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Matières Premières -->
+<div class="modal-backdrop" id="modal-matieres" onclick="closeModalOutside(event,'modal-matieres')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-cat-tag">Notre engagement qualité</div>
+        <div class="modal-title">Nos Matières Premières</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-matieres')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Farines sélectionnées, beurres fins et ingrédients frais de saison — chez L'Atelier, la qualité commence par le choix des matières premières.</p>
+      <div class="modal-grid">
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/5e2964d2-e69a-4275-8e93-7707b1a2ecb0/image-911x1215.png" alt="Matières premières" />
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/ab346f22-5482-450f-88f5-f63b8dfceb8b/image-911x911.png" alt="Matières premières" />
+        </div>
+        <div class="modal-card">
+          <img class="modal-card-img" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/9876162b-1185-43f5-b314-880fa6b66d36/image-911x1138.png" alt="Matières premières" />
+        </div>
+      </div>
+      <div class="modal-info-banner"><span>🌾</span> Aucun additif, aucun conservateur. Nos produits sont élaborés chaque jour avec des ingrédients naturels et traçables.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── À PROPOS ── -->
+<section id="apropos">
+  <div class="container">
+    <div class="about-wrap">
+      <div class="about-img-stack reveal-left">
+        <img class="about-img-main" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/738203ea-8362-4e35-8467-1ab2d4a8e8a8/l0,t367,w922,h1121/image-768x934.png" alt="Les Classiques L'Atelier" />
+        <img class="about-img-accent" src="https://www.lateliervillefranche.fr/wp-content/uploads/go-x/u/e037e9bd-ba96-4255-a2bc-441d0eba9f53/l0,t39,w1024,h985/image-768x739.png" alt="Spécialités L'Atelier" />
+        <div class="about-badge"><strong>7j/7</strong>Ouvert dès 6h00</div>
+      </div>
+      <div class="about-text reveal-right">
+        <div class="eyebrow"><div class="eyebrow-line"></div><span>Notre Histoire</span></div>
+        <h2 class="section-title">L'amour du beau<br />et du <em>bon</em></h2>
+        <p class="section-sub" style="margin-bottom:2.5rem">Chez L'Atelier, chaque journée commence avant l'aube. Nos artisans façonnent à la main des pains et des pâtisseries avec des matières premières soigneusement sélectionnées — parce que la qualité ne se négocie pas.</p>
+        <div class="values">
+          <div class="value-card"><div class="value-icon">🌾</div><h4>Matières Premières</h4><p>Farines sélectionnées, beurres fins et ingrédients frais de saison.</p></div>
+          <div class="value-card"><div class="value-icon">👐</div><h4>Tout Fait Maison</h4><p>Aucun produit industriel — chaque pièce façonnée à la main.</p></div>
+          <div class="value-card"><div class="value-icon">✨</div><h4>Esthétique Soignée</h4><p>Des créations aussi belles à regarder qu'à déguster.</p></div>
+          <div class="value-card"><div class="value-icon">🎂</div><h4>Sur Commande</h4><p>Gâteaux d'anniversaire et pièces montées sur mesure.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESSUS ── -->
+<section id="processus">
+  <div class="container">
+    <div class="reveal" style="text-align:center;max-width:560px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center"><div class="eyebrow-line"></div><span>Notre Processus</span><div class="eyebrow-line"></div></div>
+      <h2 class="section-title" style="color:#fff">De la farine à votre table,<br /><em>chaque matin</em></h2>
+    </div>
+    <div class="process-steps">
+      <div class="process-step reveal"><div class="step-num">01</div><h3>Sélection</h3><p>Farines de qualité, beurres fins et ingrédients frais sourcés avec soin.</p></div>
+      <div class="process-step reveal" style="transition-delay:.15s"><div class="step-num">02</div><h3>Préparation</h3><p>Pétrissage, façonnage et assemblage à la main dès 3h du matin.</p></div>
+      <div class="process-step reveal" style="transition-delay:.3s"><div class="step-num">03</div><h3>Cuisson</h3><p>Four de boulangerie traditionnel pour une cuisson parfaite à cœur.</p></div>
+      <div class="process-step reveal" style="transition-delay:.45s"><div class="step-num">04</div><h3>Dégustation</h3><p>Produits frais disponibles dès 06h00 pour votre plus grand plaisir.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AVIS ── -->
+<section id="avis">
+  <div class="container">
+    <div class="reveal">
+      <div class="eyebrow"><div class="eyebrow-line"></div><span>Ce Que Disent Nos Clients</span></div>
+      <h2 class="section-title">Plus de 1 100 avis<br /><em>vérifiés Google</em></h2>
+    </div>
+    <div class="rating-hero reveal">
+      <div class="rating-big">
+        <div class="rating-num">4.2</div>
+        <div class="stars">★★★★☆</div>
+        <div class="rating-count">1 100+ avis Google</div>
+      </div>
+      <div class="rating-bars">
+        <div class="bar-row"><span class="bar-label">5★</span><div class="bar-track"><div class="bar-fill" style="width:58%"></div></div><span class="bar-pct">58%</span></div>
+        <div class="bar-row"><span class="bar-label">4★</span><div class="bar-track"><div class="bar-fill" style="width:22%"></div></div><span class="bar-pct">22%</span></div>
+        <div class="bar-row"><span class="bar-label">3★</span><div class="bar-track"><div class="bar-fill" style="width:10%"></div></div><span class="bar-pct">10%</span></div>
+        <div class="bar-row"><span class="bar-label">2★</span><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div><span class="bar-pct">5%</span></div>
+        <div class="bar-row"><span class="bar-label">1★</span><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div><span class="bar-pct">5%</span></div>
+      </div>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <div class="review-header">
+          <div class="reviewer-avatar" style="background:#c8973a">M</div>
+          <div><div class="reviewer-name">Marie L.</div><div class="review-stars">★★★★★</div><div class="reviewer-date">Il y a 2 semaines</div></div>
+        </div>
+        <p class="review-text">« Une boulangerie exceptionnelle ! Les éclairs sont sublimes et la baguette tradition est croustillante à souhait. On revient chaque semaine sans hésiter. »</p>
+      </div>
+      <div class="review-card reveal" style="transition-delay:.1s">
+        <div class="review-header">
+          <div class="reviewer-avatar" style="background:#5c3317">A</div>
+          <div><div class="reviewer-name">Aurélie B.</div><div class="review-stars">★★★★★</div><div class="reviewer-date">Il y a 3 semaines</div></div>
+        </div>
+        <p class="review-text">« Les croissants sont feuilletés à la perfection, le pain au levain est une merveille. L'équipe est souriante et de bon conseil. Un incontournable de Villefranche ! »</p>
+      </div>
+      <div class="review-card reveal" style="transition-delay:.2s">
+        <div class="review-header">
+          <div class="reviewer-avatar" style="background:#b8832a">J</div>
+          <div><div class="reviewer-name">Jean-Pierre M.</div><div class="review-stars">★★★★★</div><div class="reviewer-date">Il y a 1 mois</div></div>
+        </div>
+        <p class="review-text">« Les meilleurs éclairs de la région sans hésitation. Présentation soignée, produits frais chaque matin. Cette boulangerie est une vraie pépite du Beaujolais. »</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="container">
+    <div class="reveal">
+      <div class="eyebrow"><div class="eyebrow-line"></div><span>Nous Rendre Visite</span></div>
+      <h2 class="section-title">Horaires & <em>Contact</em></h2>
+      <p class="section-sub">Venez nous rendre visite au cœur de Villefranche-sur-Saône, 7 jours sur 7.</p>
+    </div>
+    <div class="contact-wrap" style="margin-top:3rem">
+      <div class="contact-info reveal-left">
+        <div class="contact-item"><div class="c-icon">📍</div><div><div class="c-label">Adresse</div><div class="c-val">10 Bd Général Leclerc<br />69400 Villefranche-sur-Saône</div></div></div>
+        <div class="contact-item"><div class="c-icon">📞</div><div><div class="c-label">Téléphone</div><div class="c-val"><a href="tel:+33474033602">04 74 03 36 02</a></div></div></div>
+        <div class="contact-item"><div class="c-icon">🌐</div><div><div class="c-label">Site officiel</div><div class="c-val"><a href="https://www.lateliervillefranche.fr/" target="_blank" rel="noopener">lateliervillefranche.fr</a></div></div></div>
+        <div class="contact-item" style="flex-direction:column;align-items:flex-start;gap:.8rem">
+          <div style="display:flex;align-items:center;gap:.8rem">
+            <div class="c-icon">🕐</div>
+            <div>
+              <div class="c-label">Horaires</div>
+              <div class="open-badge" style="margin-top:.4rem;margin-bottom:0"><div class="open-dot"></div><span>Ouvert aujourd'hui</span></div>
+            </div>
+          </div>
+          <div class="hours-inline" style="width:100%;margin-top:.5rem">
+            <div class="hours-row"><span class="hours-day">Lundi – Samedi</span><span class="hours-time">06h00 – 20h00</span></div>
+            <div class="hours-row"><span class="hours-day">Dimanche</span><span class="hours-time">06h00 – 19h00</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="map-wrap reveal-right">
+        <iframe title="Localisation L'Atelier" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2753.1!2d4.7231!3d45.9879!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f4c2c7a9ae3f69%3A0x6e6c6b456e7a72de!2s10+Bd+G%C3%A9n%C3%A9ral+Leclerc%2C+69400+Villefranche-sur-Sa%C3%B4ne!5e0!3m2!1sfr!2sfr!4v1" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-logo">L'<em>Atelier</em></div>
+      <p class="footer-brand-desc">Boulangerie Pâtisserie Artisanale à Villefranche-sur-Saône. Ouverte 7j/7 dès 6h, pour que chaque matin commence bien.</p>
+      <div class="social-links">
+        <a class="social-btn" href="https://www.instagram.com/lateliervillefranche/" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a class="social-btn" href="https://www.facebook.com/boulangerie.Latelier.villefranche/" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          Facebook
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#featured">Nos Créations</a></li>
+        <li><a href="#apropos">À Propos</a></li>
+        <li><a href="#avis">Avis Clients</a></li>
+        <li><a href="#contact">Horaires & Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+33474033602">04 74 03 36 02</a></li>
+        <li><a href="https://www.lateliervillefranche.fr/" target="_blank">Site officiel</a></li>
+        <li><a href="https://www.google.com/maps?q=10+Bd+Général+Leclerc+69400+Villefranche" target="_blank">Voir sur Maps</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 L'Atelier Villefranche — Site de démonstration</p>
+    <p><a href="https://www.lateliervillefranche.fr/">Site officiel →</a></p>
+  </div>
+</footer>
+
+<script>
+  // ── Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => observer.observe(el));
+
+  // ── Modal
+  function openModal(id) {
+    document.body.style.overflow = 'hidden';
+    document.getElementById('modal-' + id).classList.add('open');
+  }
+
+  function closeModal(id) {
+    document.body.style.overflow = '';
+    document.getElementById(id).classList.remove('open');
+  }
+
+  function closeModalOutside(e, id) {
+    if (e.target === e.currentTarget) closeModal(id);
+  }
+
+  // Keyboard close
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop.open').forEach(m => {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+</script>
+
+<!-- ── CURSEUR ── -->
+<div id="cursor">🥐</div>
+<script>
+  const cur = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button,[onclick],.feat-card').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+</script>
+</body>
+</html>
