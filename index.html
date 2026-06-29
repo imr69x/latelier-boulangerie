@@ -1247,13 +1247,27 @@
 
   /* ── EDIT MODE ── */
   body.admin-active [contenteditable]:hover {
-    outline: 2px dashed rgba(184,131,42,.65); outline-offset: 2px; border-radius: 3px; cursor: text;
+    outline: 2px dashed rgba(184,131,42,.65); outline-offset: 2px; border-radius: 3px;
   }
   body.admin-active [contenteditable]:focus {
     outline: 2px solid #b8832a; outline-offset: 2px; border-radius: 3px;
     background: rgba(184,131,42,.05);
   }
-  body.admin-active img:hover { outline: 2px dashed rgba(184,131,42,.7) !important; cursor: pointer !important; }
+  body.admin-active img:hover { outline: 2px dashed rgba(184,131,42,.7) !important; }
+  /* Force le curseur custom sur tous les éléments admin */
+  #admin-bar *, #adm-dlg-backdrop *, #adm-img-lbl,
+  .adm-btn, .adm-tab, .adm-del, .adm-add, .adm-section-del,
+  .adm-stype, #adm-dlg-box button, #adm-dlg-box input,
+  #adm-dlg-box textarea, #adm-dlg-box select { cursor: none !important; }
+
+  /* ── FOCAL POINT PICKER ── */
+  #adm-focal-wrap { cursor: crosshair; }
+  #adm-focal-wrap * { cursor: none !important; }
+  #adm-focal-cross {
+    position: absolute; width: 22px; height: 22px;
+    transform: translate(-50%,-50%); pointer-events: none; display: none;
+    align-items: center; justify-content: center;
+  }
 
   /* ── IMAGE HOVER LABEL ── */
   #adm-img-lbl {
@@ -1368,6 +1382,7 @@
   <div class="adm-actions">
     <button class="adm-btn" onclick="admAddFeatured()">+ Catégorie</button>
     <button class="adm-btn" onclick="admAddSection()">+ Section</button>
+    <button class="adm-btn" onclick="admAddStandaloneModal()">+ Popup</button>
     <button class="adm-btn adm-btn-gold" onclick="admExport()">⬇ Télécharger le site</button>
     <button class="adm-btn adm-btn-red" onclick="admReset()">↺ Réinitialiser</button>
     <button class="adm-btn" onclick="admLock()">🔒 Verrouiller</button>
@@ -1489,6 +1504,10 @@ function admSetupImgClick() {
 function admOpenImgDlg(imgEl) {
   admImgTarget = imgEl;
   const curSrc = imgEl.src && !imgEl.src.startsWith('data:') ? imgEl.src : '';
+  const curPos = imgEl.style.objectPosition || '50% 50%';
+  const posX   = parseFloat(curPos.split(' ')[0]) || 50;
+  const posY   = parseFloat((curPos.split(' ')[1] || '50%')) || 50;
+
   admShowDlg(`
     <h3>Modifier l'image</h3>
     <div class="adm-tabs">
@@ -1499,7 +1518,7 @@ function admOpenImgDlg(imgEl) {
       <div class="adm-field">
         <label>Lien de l'image</label>
         <input type="url" id="adm-iurl" placeholder="https://..." value="${admEsc(curSrc)}"
-          oninput="admImgPreviewUrl(this.value,'adm-iprev-url')" />
+          oninput="admImgPreviewUrl(this.value,'adm-iprev-url');admFocalUpdate(this.value)" />
       </div>
       <div class="adm-preview" id="adm-iprev-url">${curSrc ? `<img src="${admEsc(curSrc)}" onerror="this.style.display='none'" />` : ''}</div>
     </div>
@@ -1507,16 +1526,74 @@ function admOpenImgDlg(imgEl) {
       <div class="adm-field">
         <label>Choisir depuis votre ordinateur</label>
         <input type="file" id="adm-ifile" accept="image/*" style="color:rgba(255,255,255,.7);font-size:.84rem;width:100%"
-          onchange="admImgFileRead(this,'adm-iprev-file')" />
+          onchange="admImgFileRead(this,'adm-iprev-file');admFocalFromFile(this)" />
       </div>
       <div class="adm-preview" id="adm-iprev-file"></div>
     </div>
+
+    <div id="adm-focal-outer" style="margin-top:1rem;display:${curSrc ? 'block' : 'none'}">
+      <div class="adm-field">
+        <label>📍 Recadrer — cliquez pour choisir la zone visible</label>
+        <div id="adm-focal-wrap" style="position:relative;overflow:hidden;border-radius:8px;height:170px;background:#111;user-select:none">
+          <img id="adm-focal-img" src="${admEsc(curSrc)}"
+            style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;object-position:${posX}% ${posY}%" />
+          <div id="adm-focal-cross" style="left:${posX}%;top:${posY}%;display:${curSrc?'flex':'none'}">
+            <svg viewBox="0 0 22 22" width="22" height="22">
+              <circle cx="11" cy="11" r="8" fill="none" stroke="#fff" stroke-width="1.8"/>
+              <circle cx="11" cy="11" r="3" fill="#b8832a"/>
+              <line x1="11" y1="1" x2="11" y2="5.5" stroke="#fff" stroke-width="1.5"/>
+              <line x1="11" y1="16.5" x2="11" y2="21" stroke="#fff" stroke-width="1.5"/>
+              <line x1="1" y1="11" x2="5.5" y2="11" stroke="#fff" stroke-width="1.5"/>
+              <line x1="16.5" y1="11" x2="21" y2="11" stroke="#fff" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+        <p style="font-size:.7rem;color:rgba(255,255,255,.3);margin-top:.3rem">Le point doré indique la zone centrale visible.</p>
+      </div>
+    </div>
+
     <div class="adm-dlg-footer">
       <button class="adm-btn" onclick="admCloseDlg()">Annuler</button>
       <button class="adm-btn adm-btn-gold" onclick="admApplyImg()">Appliquer</button>
     </div>
   `);
+
+  setTimeout(() => {
+    const fw = document.getElementById('adm-focal-wrap');
+    if (!fw) return;
+    fw.addEventListener('click', e => {
+      const r  = fw.getBoundingClientRect();
+      const x  = ((e.clientX - r.left)  / r.width  * 100).toFixed(1);
+      const y  = ((e.clientY - r.top)   / r.height * 100).toFixed(1);
+      fw.dataset.x = x; fw.dataset.y = y;
+      const fi = document.getElementById('adm-focal-img');
+      const fc = document.getElementById('adm-focal-cross');
+      if (fi) fi.style.objectPosition = x + '% ' + y + '%';
+      if (fc) { fc.style.left = x + '%'; fc.style.top = y + '%'; fc.style.display = 'flex'; }
+    });
+    if (curSrc) { fw.dataset.x = posX; fw.dataset.y = posY; }
+  }, 50);
 }
+
+window.admFocalUpdate = function(url) {
+  const fo = document.getElementById('adm-focal-outer');
+  const fi = document.getElementById('adm-focal-img');
+  if (!url) { if (fo) fo.style.display = 'none'; return; }
+  if (fo) fo.style.display = 'block';
+  if (fi) fi.src = url;
+};
+
+window.admFocalFromFile = function(input) {
+  const f = input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const fo = document.getElementById('adm-focal-outer');
+    const fi = document.getElementById('adm-focal-img');
+    if (fo) fo.style.display = 'block';
+    if (fi) fi.src = e.target.result;
+  };
+  r.readAsDataURL(f);
+};
 
 window.admImgTab = function(tab) {
   document.getElementById('ait-url').style.display  = tab==='url'  ? 'block' : 'none';
@@ -1551,6 +1628,11 @@ window.admApplyImg = function() {
     admImgTarget.src = urlInput.value.trim();
   } else if (active === 'file' && fileInput?.dataset?.b64) {
     admImgTarget.src = fileInput.dataset.b64;
+  }
+  // Appliquer le point focal (recadrage)
+  const fw = document.getElementById('adm-focal-wrap');
+  if (fw?.dataset.x !== undefined) {
+    admImgTarget.style.objectPosition = `${fw.dataset.x}% ${fw.dataset.y}%`;
   }
   admCloseDlg(); admImgTarget = null;
 };
@@ -1628,6 +1710,17 @@ function admSetupAddBtns() {
   const featGrid = document.querySelector('.featured-grid');
   if (featGrid && !featGrid.nextElementSibling?.classList?.contains('adm-add'))
     addAddBtn('Ajouter une catégorie', featGrid.parentNode, featGrid, () => admAddFeatured());
+
+  // Cartes sans popup : afficher un bouton "+ Ajouter un popup"
+  document.querySelectorAll('.feat-card:not([onclick])').forEach(card => {
+    if (card.querySelector('.adm-popup-btn')) return;
+    const b = document.createElement('button');
+    b.className = 'adm-add adm-popup-btn';
+    b.textContent = '+ Ajouter un popup';
+    b.style.cssText = 'position:absolute;bottom:.7rem;left:.7rem;right:.7rem;z-index:15;margin-top:0;border-radius:8px;font-size:.74rem;';
+    b.addEventListener('click', e => { e.stopPropagation(); admAddModalToCard(card); });
+    card.appendChild(b);
+  });
 }
 
 /* ── AJOUTER PRODUIT DANS MODAL ── */
@@ -1932,6 +2025,133 @@ window.admApplyFeatured = function() {
 window.admAddItemInNewModal = function(id) {
   const grid = document.querySelector(`#modal-${id} .modal-grid`);
   if (grid) admAddModalItem(id, grid);
+};
+
+/* ── AJOUTER UN POPUP À UNE CARTE EXISTANTE ── */
+function admAddModalToCard(card) {
+  admContainerTarget = card;
+  const cardTitle = card.querySelector('h3')?.textContent?.trim() || '';
+  const id = 'cmod-' + Date.now();
+  admShowDlg(`
+    <h3>Ajouter un popup à cette carte</h3>
+    <p class="adm-dlg-hint">Crée une popup liée à cette carte. Elle s'ouvrira au clic.</p>
+    <div class="adm-field"><label>Titre du popup</label><input type="text" id="amc-title" placeholder="Ex: Pains Artisanaux" value="${admEsc(cardTitle)}" /></div>
+    <div class="adm-field"><label>Badge / sous-titre</label><input type="text" id="amc-badge" placeholder="Ex: Cuit chaque matin" /></div>
+    <div class="adm-field"><label>Description</label><textarea id="amc-desc" placeholder="Description qui s'affiche dans le popup..."></textarea></div>
+    <div class="adm-dlg-footer">
+      <button class="adm-btn" onclick="admCloseDlg()">Annuler</button>
+      <button class="adm-btn adm-btn-gold" onclick="admApplyModalToCard('${id}')">Créer le popup</button>
+    </div>
+  `);
+}
+
+window.admApplyModalToCard = function(id) {
+  const card  = admContainerTarget;
+  const title = document.getElementById('amc-title')?.value?.trim() || 'Popup';
+  const badge = document.getElementById('amc-badge')?.value?.trim() || '';
+  const desc  = document.getElementById('amc-desc')?.value?.trim() || '';
+
+  card.setAttribute('onclick', `openModal('${id}')`);
+
+  // Ajouter un CTA "Voir →" dans l'overlay
+  const overlay = card.querySelector('.feat-overlay');
+  if (overlay && !overlay.querySelector('.feat-cta')) {
+    const cta = document.createElement('div');
+    cta.className = 'feat-cta';
+    cta.innerHTML = 'Découvrir <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    overlay.appendChild(cta);
+  }
+
+  // Créer la modal
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.id = 'modal-' + id;
+  modal.setAttribute('onclick', `closeModalOutside(event,'modal-${id}')`);
+  modal.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-cat-tag" contenteditable="true" spellcheck="false">${admEsc(badge)}</div>
+          <div class="modal-title" contenteditable="true" spellcheck="false">${admEsc(title)}</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-${id}')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc" contenteditable="true" spellcheck="false">${admEsc(desc)}</p>
+        <div class="modal-grid"></div>
+        <button class="adm-add" style="display:flex" onclick="admAddItemInNewModal('${id}')">+ Ajouter un produit</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+
+  // Retirer le bouton "+ Ajouter un popup" et ajouter le bouton supprimer
+  card.querySelector('.adm-popup-btn')?.remove();
+  admAddDelBtn(card, () => document.getElementById('modal-'+id)?.remove());
+
+  admCloseDlg(); admContainerTarget = null;
+};
+
+/* ── POPUP STANDALONE (bouton dans la barre admin) ── */
+window.admAddStandaloneModal = function() {
+  const id = 'popup-' + Date.now();
+  admShowDlg(`
+    <h3>Nouveau popup</h3>
+    <p class="adm-dlg-hint">Crée un popup et un bouton de déclenchement avant le pied de page.</p>
+    <div class="adm-field"><label>Titre du popup</label><input type="text" id="sm-title" placeholder="Ex: Notre menu du mois" /></div>
+    <div class="adm-field"><label>Badge / sous-titre</label><input type="text" id="sm-badge" placeholder="Ex: Nouveautés de saison" /></div>
+    <div class="adm-field"><label>Description</label><textarea id="sm-desc" placeholder="Description dans le popup..."></textarea></div>
+    <div class="adm-field"><label>Texte du bouton déclencheur</label><input type="text" id="sm-btn" placeholder="Ex: Voir notre menu →" /></div>
+    <div class="adm-dlg-footer">
+      <button class="adm-btn" onclick="admCloseDlg()">Annuler</button>
+      <button class="adm-btn adm-btn-gold" onclick="admApplyStandaloneModal('${id}')">Créer</button>
+    </div>
+  `);
+};
+
+window.admApplyStandaloneModal = function(id) {
+  const title  = document.getElementById('sm-title')?.value?.trim() || 'Popup';
+  const badge  = document.getElementById('sm-badge')?.value?.trim() || '';
+  const desc   = document.getElementById('sm-desc')?.value?.trim() || '';
+  const btnTxt = document.getElementById('sm-btn')?.value?.trim() || title + ' →';
+
+  // Créer la modal
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.id = 'modal-' + id;
+  modal.setAttribute('onclick', `closeModalOutside(event,'modal-${id}')`);
+  modal.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-cat-tag" contenteditable="true" spellcheck="false">${admEsc(badge)}</div>
+          <div class="modal-title" contenteditable="true" spellcheck="false">${admEsc(title)}</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-${id}')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc" contenteditable="true" spellcheck="false">${admEsc(desc)}</p>
+        <div class="modal-grid"></div>
+        <button class="adm-add" style="display:flex" onclick="admAddItemInNewModal('${id}')">+ Ajouter un produit</button>
+        <div class="modal-info-banner" contenteditable="true" spellcheck="false"><span>✨</span> Cliquez ici pour modifier cette info</div>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+
+  // Créer un bloc déclencheur avant le footer
+  const trigger = document.createElement('div');
+  trigger.style.cssText = 'padding:2.5rem 2rem;text-align:center;position:relative;background:var(--warm);';
+  trigger.innerHTML = `
+    <button onclick="openModal('${id}')" style="background:var(--gold);color:#fff;padding:.9rem 2.2rem;border-radius:50px;border:none;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;letter-spacing:.06em">
+      <span contenteditable="true" spellcheck="false">${admEsc(btnTxt)}</span>
+    </button>`;
+  const sdel = document.createElement('button');
+  sdel.className = 'adm-section-del';
+  sdel.textContent = '✕ Supprimer';
+  sdel.onclick = () => { if (confirm('Supprimer le bouton et la popup ?')) { modal.remove(); trigger.remove(); } };
+  trigger.appendChild(sdel);
+  document.querySelector('footer')?.before(trigger);
+
+  admCloseDlg();
 };
 
 /* ── AJOUTER UNE SECTION ── */
