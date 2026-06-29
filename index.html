@@ -1254,11 +1254,16 @@
     background: rgba(184,131,42,.05);
   }
   body.admin-active img:hover { outline: 2px dashed rgba(184,131,42,.7) !important; }
-  /* Force le curseur custom sur tous les éléments admin */
-  #admin-bar *, #adm-dlg-backdrop *, #adm-img-lbl,
-  .adm-btn, .adm-tab, .adm-del, .adm-add, .adm-section-del,
-  .adm-stype, #adm-dlg-box button, #adm-dlg-box input,
-  #adm-dlg-box textarea, #adm-dlg-box select { cursor: none !important; }
+  /* En mode admin : curseur normal partout, croissant masqué */
+  body.admin-active, body.admin-active * { cursor: auto !important; }
+  body.admin-active #cursor { display: none !important; }
+  body.admin-active [contenteditable]:hover,
+  body.admin-active [contenteditable]:focus { cursor: text !important; }
+  body.admin-active img:hover { cursor: pointer !important; }
+  body.admin-active .adm-btn, body.admin-active .adm-tab,
+  body.admin-active .adm-del, body.admin-active .adm-add,
+  body.admin-active .adm-stype, body.admin-active .adm-section-del,
+  body.admin-active button { cursor: pointer !important; }
 
   /* ── FOCAL POINT PICKER ── */
   #adm-focal-wrap { cursor: crosshair; }
