@@ -96,18 +96,18 @@
     .hero { position:relative; min-height:100vh; display:grid; grid-template-columns:1fr 1fr; overflow:hidden; }
     .hero-left {
       display:flex; flex-direction:column; justify-content:flex-start;
-      padding:calc(72px + 0.3rem) 4rem 4rem 6rem; background:var(--dark); position:relative; z-index:2;
+      padding:72px 4rem 2rem 6rem; background:var(--dark); position:relative; z-index:2;
     }
     .hero-left::after { display:none; }
-    .hero-eyebrow { display:flex; align-items:center; gap:.8rem; margin-bottom:1.8rem; }
+    .hero-eyebrow { display:flex; align-items:center; gap:.8rem; margin-bottom:.8rem; }
     .hero-line { width:40px; height:1px; background:var(--gold); }
     .hero-eyebrow span { font-size:.75rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); }
     .hero h1 {
-      font-family:'Cormorant Garamond',serif; font-size:clamp(3.5rem,5.5vw,6rem);
-      font-weight:300; line-height:1.05; color:#fff; margin-bottom:1.5rem;
+      font-family:'Cormorant Garamond',serif; font-size:clamp(3rem,5vw,5.2rem);
+      font-weight:300; line-height:1.05; color:#fff; margin-bottom:1rem;
     }
     .hero h1 em { font-style:italic; color:var(--gold-lt); display:block; }
-    .hero-desc { font-size:1rem; color:rgba(255,255,255,.55); max-width:380px; margin-bottom:2.5rem; line-height:1.8; }
+    .hero-desc { font-size:.95rem; color:rgba(255,255,255,.55); max-width:380px; margin-bottom:1.6rem; line-height:1.7; }
     .hero-actions { display:flex; gap:1rem; align-items:center; }
     .btn-gold {
       background:var(--gold); color:#fff; padding:.9rem 2.2rem; border-radius:50px;
@@ -122,7 +122,7 @@
     .btn-ghost:hover { color:#fff; }
     .btn-ghost svg { transition:transform .25s; }
     .btn-ghost:hover svg { transform:translateX(4px); }
-    .hero-stats { display:flex; gap:2.5rem; margin-top:4rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,.08); }
+    .hero-stats { display:flex; gap:2.5rem; margin-top:auto; padding-top:1.4rem; border-top:1px solid rgba(255,255,255,.08); }
     .stat-num { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:600; color:var(--gold-lt); line-height:1; margin-bottom:.2rem; }
     .stat-label { font-size:.75rem; color:rgba(255,255,255,.4); letter-spacing:.06em; text-transform:uppercase; }
     .hero-right { position:relative; overflow:hidden; }
