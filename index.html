@@ -1388,6 +1388,7 @@
     <button class="adm-btn" onclick="admAddFeatured()">+ Catégorie</button>
     <button class="adm-btn" onclick="admAddSection()">+ Section</button>
     <button class="adm-btn" onclick="admAddStandaloneModal()">+ Popup</button>
+    <button class="adm-btn" onclick="admPickCursor()">🎨 Curseur</button>
     <button class="adm-btn adm-btn-gold" onclick="admExport()">⬇ Télécharger le site</button>
     <button class="adm-btn adm-btn-red" onclick="admReset()">↺ Réinitialiser</button>
     <button class="adm-btn" onclick="admLock()">🔒 Verrouiller</button>
@@ -2313,6 +2314,44 @@ window.admReset = function() {
   if (confirm('Réinitialiser toutes les modifications ?\nLa page va se recharger.')) {
     location.reload();
   }
+};
+
+/* ── CHOISIR LE CURSEUR ── */
+window.admPickCursor = function() {
+  const emojis = [
+    '🥐','🥖','🎂','🧁','🍰','🍩','🍪','🥧','🍫','🥮',
+    '🍮','🥯','🧇','🍞','🥞','🎉','🌸','⭐','🍓','🍋',
+    '🍇','🫐','🍑','🍒','🥝','🍌','🥕','🌻','🦋','✨'
+  ];
+  const cur = document.getElementById('cursor');
+  const active = cur ? cur.textContent.trim() : '🥐';
+  admShowDlg(`
+    <h3>Choisir le curseur</h3>
+    <p class="adm-dlg-hint">Cliquez sur une icône pour changer le curseur visible par les visiteurs.</p>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-bottom:1.4rem">
+      ${emojis.map(e => `
+        <div onclick="admSetCursor('${e}')"
+          style="font-size:1.8rem;text-align:center;padding:.6rem;border-radius:8px;
+          border:2px solid ${e===active?'#b8832a':'rgba(255,255,255,.1)'};
+          background:${e===active?'rgba(184,131,42,.15)':''};
+          transition:all .2s;user-select:none"
+          onmouseover="this.style.background='rgba(184,131,42,.12)'"
+          onmouseout="this.style.background='${e===active?'rgba(184,131,42,.15)':''}'"
+          title="${e}">
+          ${e}
+        </div>
+      `).join('')}
+    </div>
+    <div class="adm-dlg-footer">
+      <button class="adm-btn" onclick="admCloseDlg()">Fermer</button>
+    </div>
+  `);
+};
+
+window.admSetCursor = function(emoji) {
+  const cur = document.getElementById('cursor');
+  if (cur) cur.textContent = emoji;
+  admCloseDlg();
 };
 
 /* ── VERROUILLER ── */
